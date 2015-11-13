@@ -40,7 +40,7 @@ public class Interval1D implements Comparable<Interval1D> {
         if      (this.low  < that.low)  return -1;
         else if (this.low  > that.low)  return +1;
         else if (this.high < that.high) return -1;
-        else if (this.high < that.high) return +1;
+        else if (this.high > that.high) return +1;
         else                            return  0;
     }
 

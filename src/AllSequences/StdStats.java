@@ -1,3 +1,4 @@
+package AllSequences;
 
 /*************************************************************************
  *  Compilation:  javac StdStats.java

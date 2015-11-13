@@ -39,6 +39,8 @@ public class EventProcessor<Value> {
   HashSet<Node<Value>> predecessors;
   HashSet<Node<Value>> successors;
   
+  // to store partial and final sequences for each node
+  
   HashMap<Node<Value>,ArrayList<LinkedList<Node<Value>>>> paths;
   
   
@@ -58,6 +60,9 @@ public class EventProcessor<Value> {
       return intervalTree.contains(node.interval);
   }
 
+  /*
+  // to find the last event from a set of overlapping events
+  // 
   public Node<Value> getLastFromOverlaps(HashSet<Node<Value>> overlaps){
 	  
 	  Node<Value> lastElement = null;
@@ -71,6 +76,7 @@ public class EventProcessor<Value> {
 	  }
 	  return lastElement;
   }
+  */
   
   
   public void add(Node<Value> node) {
@@ -173,6 +179,8 @@ public class EventProcessor<Value> {
       
   }
 
+
+  // to remove all events prior to the given time
   public Integer purge(int time){
 	  HashSet<Node<Value>> overlaps = new HashSet<Node<Value>>();
 	  overlaps = intervalTree.searchAll(new Interval1D(Integer.MIN_VALUE,time));
@@ -221,431 +229,6 @@ public class EventProcessor<Value> {
   */
 
  
-  public static void testEventProcessor() {
-	  
-	  long startTime = System.currentTimeMillis();
-	  EventProcessor<String> ep=new EventProcessor<String>();//sourceNode,targetNode);
-      
-	  Node<String> S = new Node<String>(new Interval1D(1, 2),"1");
-      
-	  Node<String> A = new Node<String>(new Interval1D(8, 9),"2");
-      
-      Node<String> B = new Node<String>(new Interval1D(12, 16),"3");
-
-      Node<String> C = new Node<String>(new Interval1D(18, 22),"4");
-      
-      Node<String> D = new Node<String>(new Interval1D(9, 13),"5"); // changed from 10-13
-      
-      Node<String> E = new Node<String>(new Interval1D(15, 19),"6");
-      
-      Node<String> F = new Node<String>(new Interval1D(21, 23),"7");
-      
-      Node<String> G = new Node<String>(new Interval1D(24, 26),"8");
-      
-      Node<String> H = new Node<String>(new Interval1D(3, 11),"10");
-      
-      Node<String> T = new Node<String>(new Interval1D(30, 32),"9");
-
-      Node<String> J = new Node<String>(new Interval1D(27, 28),"12");
-
-      Node<String> K = new Node<String>(new Interval1D(17, 17),"13");
-
-      Node<String> L = new Node<String>(new Interval1D(3, 5),"14");
-
-      /*
-      */
-
-
-      System.out.println("ADD: "+B);
-      ep.add(B);
-      System.out.println("ADD: "+C);
-      ep.add(C);
-      System.out.println("ADD: "+D);
-      ep.add(D);
-      System.out.println("ADD: "+E);
-      ep.add(E);
-      System.out.println("ADD: "+F);
-      ep.add(F);
-      System.out.println("ADD: "+G);
-      ep.add(G);
-      System.out.println("ADD: "+T);
-      ep.add(T);
-      //ep.printPaths();
-
-      System.out.println("ADD: "+S);
-      ep.add(S);
-      //ep.printPaths();
-      
-      System.out.println("ADD: "+A);
-      ep.add(A);
-      //ep.printPaths();
-
-      System.out.println("ADD: "+H);
-      ep.add(H);
-
-      //ep.printPaths();
-
-      ep.purge(12);
-      //System.out.println("integrity check: " + ep.st.check());
-
-      //ep.printPaths();
-
-      System.out.println("ADD: "+S);
-      ep.add(S);
-      //ep.printPaths();
-      
-      System.out.println("ADD: "+A);
-      ep.add(A);
-      //ep.printPaths();
-
-      //ep.st.printheight();
-      System.out.println("ADD: "+H);
-      ep.add(H);
-
-      ///////
-      long stopTime = System.currentTimeMillis();
-      long elapsedTime = stopTime - startTime;
-      System.out.println("DAG Construction Time: " + elapsedTime);
-      System.out.println();
-
-      // without memorization
-      startTime = System.currentTimeMillis();
-      ep.printPathsNoDyn();
-      //ep.graph.printPathCountNoDyn();
-      
-      stopTime = System.currentTimeMillis();
-      elapsedTime = stopTime - startTime;
-      System.out.println("DFS (No Memoization) Time: " + elapsedTime);
-  
-      // with memorization
-      startTime = System.currentTimeMillis();
-      ep.printPaths();
-      //ep.graph.printPathCount();
-      
-      stopTime = System.currentTimeMillis();
-      elapsedTime = stopTime - startTime;
-      System.out.println("DFS (Memoization) Time: " + elapsedTime);
-
-  }
-
-  public static void testEventProcessor2() {
-	  
-	  long startTime = System.currentTimeMillis();
-	  EventProcessor<String> ep=new EventProcessor<String>();//sourceNode,targetNode);
-      
-	  Node<String> A = new Node<String>(new Interval1D(215, 221),"1");
-      
-	  Node<String> B = new Node<String>(new Interval1D(1, 17),"2");
-      
-      Node<String> C = new Node<String>(new Interval1D(537, 546),"3");
-
-      Node<String> D = new Node<String>(new Interval1D(774, 792),"4");
-      
-      Node<String> E = new Node<String>(new Interval1D(194,208),"5"); // changed from 10-13
-      
-      Node<String> F = new Node<String>(new Interval1D(473, 492),"6");
-      
-      Node<String> G = new Node<String>(new Interval1D(333,345),"7");
-      
-      Node<String> H = new Node<String>(new Interval1D(792, 802),"8");
-      
-      Node<String> I = new Node<String>(new Interval1D(147, 164),"9");
-
-      Node<String> J = new Node<String>(new Interval1D(606, 614),"10");
-      
-      Node<String> K = new Node<String>(new Interval1D(37, 41),"11");
-
-      Node<String> L = new Node<String>(new Interval1D(230, 235),"12");
-
-      Node<String> M = new Node<String>(new Interval1D(63, 77),"13");
-
-      Node<String> N = new Node<String>(new Interval1D(511, 515),"14");
-
-      Node<String> O = new Node<String>(new Interval1D(526, 540),"15");
-
-      Node<String> P = new Node<String>(new Interval1D(129, 147),"16");
-
-      Node<String> Q = new Node<String>(new Interval1D(589, 603),"17");
-
-      Node<String> R = new Node<String>(new Interval1D(431, 440),"18");
-
-      Node<String> S = new Node<String>(new Interval1D(965, 970),"19");
-
-      Node<String> T = new Node<String>(new Interval1D(143, 157),"20");
-
-      /*
-      */
-
-
-      System.out.println("ADD: "+A);
-      ep.add(A);
-      System.out.println("ADD: "+B);
-      ep.add(B);
-      System.out.println("ADD: "+C);
-      ep.add(C);
-      System.out.println("ADD: "+D);
-      ep.add(D);
-      System.out.println("ADD: "+E);
-      ep.add(E);
-      System.out.println("ADD: "+F);
-      ep.add(F);
-      System.out.println("ADD: "+G);
-      ep.add(G);
-      System.out.println("ADD: "+H);
-      ep.add(H);
-      System.out.println("ADD: "+I);
-      ep.add(I);
-      System.out.println("ADD: "+J);
-      ep.add(J);
-      System.out.println("ADD: "+K);
-      ep.add(K);
-      System.out.println("ADD: "+L);
-      ep.add(L);
-      System.out.println("ADD: "+M);
-      ep.add(M);
-      System.out.println("ADD: "+N);
-      ep.add(N);
-      System.out.println("ADD: "+O);
-      ep.add(O);
-      System.out.println("ADD: "+P);
-      ep.add(P);
-
-      
-      System.out.println("ADD: "+Q);
-      ep.add(Q);
-      System.out.println("ADD: "+R);
-      ep.add(R);
-      System.out.println("ADD: "+S);
-      ep.add(S);
-      System.out.println("ADD: "+T);
-      ep.add(T);
-      
-
-      ///////
-      long stopTime = System.currentTimeMillis();
-      long elapsedTime = stopTime - startTime;
-      System.out.println("DAG Construction Time: " + elapsedTime);
-      System.out.println();
-      System.out.println();
-      
-      /*
-      System.out.println(P + "\nSuccessors " + P.successors + "\nPredecessors " + P.predecessors);
-      System.out.println("\nOverlaps" + ep.st.searchAll(P.interval));
-	  Node<String> next=ep.st.searchSuccessor(new Interval1D(P.interval.high,P.interval.high));
-	  System.out.println("NEXT:"+next);
-	  //successors=st.searchAll(next.interval);
-      System.out.println("\nSuccessors: " + ep.st.searchAll(next.interval));
-      System.out.println(M + "\nSuccessors " + M.successors + "\nPredecessors " + M.predecessors);
-      */
-      
-
-      // without memorization
-      startTime = System.currentTimeMillis();
-      ep.printPathsNoDyn();
-      stopTime = System.currentTimeMillis();
-      elapsedTime = stopTime - startTime;
-      System.out.println("DFS (No Memoization) Time: " + elapsedTime);
-  
-      System.out.println();
-      System.out.println();
-
-      // with memorization
-      /*
-      startTime = System.currentTimeMillis();
-      ep.printPaths();
-      stopTime = System.currentTimeMillis();
-      elapsedTime = stopTime - startTime;
-      System.out.println("DFS (Memoization) Time: " + elapsedTime);
-      */
-
-  }
-
-  /**
-   * 
-   * @param args
-   * -p indicates to print the sequences
-   * -m indicates to use memoization. otherwise only non-memoization technique is applied
-   * -n NUM : input the number of events. default is 20
-   * -el VALUE : input event length. default is 20
-   * -wl VALUE : input window length. default is 1000
-   * 
-   */
-  
-  
-  public static void main(String[] args) {
-	  int n=20;
-	  boolean print=false;
-	  boolean memoization=false;
-	  int eventLength=20;
-	  int windowLength=1000;
-	  for (int i=0; i< args.length; i++){
-		  if (args[i].equals("-p")) print=true;
-		  if (args[i].equals("-m")) memoization=true;
-		  if (args[i].equals("-n")) n=Integer.parseInt(args[++i]);
-		  if (args[i].equals("-el")) eventLength=Integer.parseInt(args[++i]);
-		  if (args[i].equals("-wl")) windowLength=Integer.parseInt(args[++i]);
-		  //if (args[i].charAt(0)!='-') n=Integer.parseInt(args[i]);
-	  }
-	  //testEventProcessor();
-	  testEventProcessor1(n,print,memoization,eventLength,windowLength);
-	  //testEventProcessor2();
-	  //testEventProcessorNoDyn();
-   }
-  
-  /**
-   * randomly create the events and apply sequence construction technique based on the input
-   * @param n : number of events
-   * @param p : print the sequences. otherwise only print the number of sequence
-   * @param memoizaton : apply memoization. otherwise only do non-memoization
-   * @param eventlength : length of an event
-   * @param windowLength : length of the window
-   */
-		  
-  
-  public static void testEventProcessor1(int n, boolean p, boolean memoizaton, int eventlength, int windowLength){
-      int N = n;
-
-      // generate N random intervals and insert into data structure
-	  EventProcessor<String> ep=new EventProcessor<String>();//sourceNode,targetNode);
-	  long startTime = System.currentTimeMillis();
-	  long nanoStartTime = System.nanoTime();
-	  Random rndNumbers = new Random(System.currentTimeMillis());
-      for (int i = 1; i <= N; i++) { 
-          //int low  = (int) (Math.random()  * (windowLength-eventlength)); // was N * 25 // was 1000
-          int low  = rndNumbers.nextInt(windowLength-eventlength); // was N * 25 // was 1000
-          int high = eventlength + low ; // (int) (Math.random() * eventlength) + low; // was 50
-          Node<String> node = new Node<String>(new Interval1D(low, high),""+i);
-          if(!ep.contains(node)){
-	          System.out.print(node + " ");
-	          if (i%5==0) System.out.println();
-	          ep.add(node);
-          }
-          else{
-        	  i--;
-          }
-      }
-      long stopTime = System.currentTimeMillis();
-	  long nanoStopTime = System.nanoTime();
-      long elapsedTime = stopTime - startTime;
-      long nanoElapsedTime = nanoStopTime - nanoStartTime;
-      System.out.println("\nDAG Construction Time: " + elapsedTime +" ms");
-      System.out.println("DAG Construction Time: " + nanoElapsedTime +" ns");
-      
-      //HybridTest(ep,1,p);
-
-      //HybridTest(ep,5,p);
-
-      //HybridTest(ep,10,p);
-
-      //HybridTest(ep,15,p);
-      for(int i=2;i<=N/eventlength;i++){
-    	  
-    	  int limit=(N-5)/i;
-    	  HybridTest(ep,limit,p);
-      }
-
-      /*
-      HybridTest(ep,27,p);
-      HybridTest(ep,18,p);
-      HybridTest(ep,13,p);
-      HybridTest(ep,11,p);
-      HybridTest(ep,9,p);
-      HybridTest(ep,8,p);
-      HybridTest(ep,7,p);
-      HybridTest(ep,6,p);
-      HybridTest(ep,5,p);
-      HybridTest(ep,4,p);
-      */
-      // Example 2 with limit 14
-      
-
-      // without memoization
-      // NoMemTest(ep,p);
-  
-      
-      // with memoization
-      if(memoizaton){
-    	  FullMemTest(ep,p);
-      }
-      
-      
-  }
-
-  
-  private static void FullMemTest(EventProcessor<String> ep, boolean p) {
-	  System.out.println();
-      System.out.println("----------------------------------------");
-	  long startTime = System.currentTimeMillis();
-	  long nanoStartTime = System.nanoTime();
-      if(p){
-    	  System.out.println("\n\nDFS (Memoization) Sequences: ");
-    	  ep.graph.printPaths();
-      }
-    	  
-      else
-          ep.graph.printPathCount();
-      
-      long stopTime = System.currentTimeMillis();
-	  long nanoStopTime = System.nanoTime();
-      long elapsedTime = stopTime - startTime;
-      long nanoElapsedTime = nanoStopTime - nanoStartTime;
-      System.out.println("DFS (Memoization) Time: " + elapsedTime +" ms");
-      System.out.println("DFS (Memoization) Time: " + nanoElapsedTime +" ns");
-	
-}
-
-private static void NoMemTest(EventProcessor<String> ep, boolean p) {
-      System.out.println();
-      System.out.println("----------------------------------------");
-	  long startTime = System.currentTimeMillis();
-	  long nanoStartTime = System.nanoTime();
-      if(p){
-    	  System.out.println("\n\nDFS (No Memoization) Sequences: ");
-    	  ep.graph.printPathsNoDyn();
-      }
-      else
-    	  ep.graph.printPathCountNoDyn();
-      
-      long stopTime = System.currentTimeMillis();
-	  long nanoStopTime = System.nanoTime();
-      long elapsedTime = stopTime - startTime;
-      long nanoElapsedTime = nanoStopTime - nanoStartTime;
-      System.out.println("DFS (No Memoization) Time: " + elapsedTime +" ms");
-      System.out.println("DFS (No Memoization) Time: " + nanoElapsedTime +" ns");
-	
-  }
-
-public static void HybridTest(EventProcessor<String> ep, int minSize, boolean print) {
-
-    System.out.println();
-    System.out.println("----------------------------------------");
-	  long startTime = System.currentTimeMillis();
-	  long nanoStartTime = System.nanoTime();
-      // call the 0-cut partitioning with limit 1
-      //ep.findCuts(8, 0);
-      ep.findCuts(minSize, 0);
-      
-      
-      // call DFS for each of the partition and record # of sequences
-      ep.applyDfsOnParts();
-      /*
-      // if a partition is too big discard all and redo from beginning
-      ep.validateParts();
-      // apply optimal partitioning algorithm
-      ep.searchOptimal();
-      */
-      // call recursive sequence construction on optimal partitions and record time
-      // DFS with memoization on parts and generate sequences recursively without memoization
-      ep.genSequencesFromParts(print);
-      long stopTime = System.currentTimeMillis();
-	  long nanoStopTime = System.nanoTime();
-      long elapsedTime = stopTime - startTime;
-      long nanoElapsedTime = nanoStopTime - nanoStartTime;
-      System.out.println("Partition Seq Generation Time: " + elapsedTime +" ms");
-      System.out.println("Partition Seq Generation Time: " + nanoElapsedTime +" ns");
-
-  }
-
   public void findCuts(int limit, int cut){
 	  System.out.println("\nFind Cut Points: limit: " + limit);
 	  cutPoints = new ArrayList<Node<String>>();
@@ -712,7 +295,7 @@ public static void HybridTest(EventProcessor<String> ep, int minSize, boolean pr
 	  
   }
 
-	private void genSequencesFromParts(boolean print) {
+  public void genSequencesFromParts(boolean print) {
 	  pathSoFar = new LinkedList<Node<Value>>(); // for generating paths from partitions
 	  curSeq = new LinkedList<LinkedList<Node<Value>>>();
 	  pathCount=0;
@@ -725,7 +308,7 @@ public static void HybridTest(EventProcessor<String> ep, int minSize, boolean pr
 		  System.out.println("No path found!");
 	}
 	
-	private void genSequencesFromParts(int partIndex, boolean print) {
+  public void genSequencesFromParts(int partIndex, boolean print) {
 		int partCount=pathsOfParts.size();
 		if(partIndex < partCount){
 			ArrayList<LinkedList<Node<Value>>> curPaths =pathsOfParts.get(partIndex);
@@ -785,7 +368,7 @@ public static void HybridTest(EventProcessor<String> ep, int minSize, boolean pr
 
 	}
 	
-	private void applyDfsOnParts() {
+	public void applyDfsOnParts() {
 		pathsOfParts = new ArrayList<ArrayList<LinkedList<Node<Value>>>>();
 		HashSet<Node<Value>> partNodes1;
 		long estimatedCostFromParts=1;
@@ -843,6 +426,257 @@ public static void HybridTest(EventProcessor<String> ep, int minSize, boolean pr
 		//System.out.println(  "Complexity   : " + complexity);
 		System.out.println("\nTotal Estimated Cost : " + estimatedCostFromParts);
 	}
+
+	public static void testEventProcessor1() {
+		  
+		  long startTime = System.currentTimeMillis();
+		  EventProcessor<String> ep=new EventProcessor<String>();//sourceNode,targetNode);
+	      
+		  Node<String> S = new Node<String>(new Interval1D(1, 2),"1");
+	      
+		  Node<String> A = new Node<String>(new Interval1D(8, 9),"2");
+	      
+	      Node<String> B = new Node<String>(new Interval1D(12, 16),"3");
+
+	      Node<String> C = new Node<String>(new Interval1D(18, 22),"4");
+	      
+	      Node<String> D = new Node<String>(new Interval1D(9, 13),"5"); // changed from 10-13
+	      
+	      Node<String> E = new Node<String>(new Interval1D(15, 19),"6");
+	      
+	      Node<String> F = new Node<String>(new Interval1D(21, 23),"7");
+	      
+	      Node<String> G = new Node<String>(new Interval1D(24, 26),"8");
+	      
+	      Node<String> H = new Node<String>(new Interval1D(3, 11),"10");
+	      
+	      Node<String> T = new Node<String>(new Interval1D(30, 32),"9");
+
+	      Node<String> J = new Node<String>(new Interval1D(27, 28),"12");
+
+	      Node<String> K = new Node<String>(new Interval1D(17, 17),"13");
+
+	      Node<String> L = new Node<String>(new Interval1D(3, 5),"14");
+
+	      /*
+	      */
+
+
+	      System.out.println("ADD: "+B);
+	      ep.add(B);
+	      System.out.println("ADD: "+C);
+	      ep.add(C);
+	      System.out.println("ADD: "+D);
+	      ep.add(D);
+	      System.out.println("ADD: "+E);
+	      ep.add(E);
+	      System.out.println("ADD: "+F);
+	      ep.add(F);
+	      System.out.println("ADD: "+G);
+	      ep.add(G);
+	      System.out.println("ADD: "+T);
+	      ep.add(T);
+	      //ep.printPaths();
+
+	      System.out.println("ADD: "+S);
+	      ep.add(S);
+	      //ep.printPaths();
+	      
+	      System.out.println("ADD: "+A);
+	      ep.add(A);
+	      //ep.printPaths();
+
+	      System.out.println("ADD: "+H);
+	      ep.add(H);
+
+	      //ep.printPaths();
+
+	      ep.purge(12);
+	      //System.out.println("integrity check: " + ep.st.check());
+
+	      //ep.printPaths();
+
+	      System.out.println("ADD: "+S);
+	      ep.add(S);
+	      //ep.printPaths();
+	      
+	      System.out.println("ADD: "+A);
+	      ep.add(A);
+	      //ep.printPaths();
+
+	      //ep.st.printheight();
+	      System.out.println("ADD: "+H);
+	      ep.add(H);
+
+	      ///////
+	      long stopTime = System.currentTimeMillis();
+	      long elapsedTime = stopTime - startTime;
+	      System.out.println("DAG Construction Time: " + elapsedTime);
+	      System.out.println();
+
+	      // without memorization
+	      startTime = System.currentTimeMillis();
+	      ep.printPathsNoDyn();
+	      //ep.graph.printPathCountNoDyn();
+	      
+	      stopTime = System.currentTimeMillis();
+	      elapsedTime = stopTime - startTime;
+	      System.out.println("DFS (No Memoization) Time: " + elapsedTime);
+	  
+	      // with memorization
+	      startTime = System.currentTimeMillis();
+	      ep.printPaths();
+	      //ep.graph.printPathCount();
+	      
+	      stopTime = System.currentTimeMillis();
+	      elapsedTime = stopTime - startTime;
+	      System.out.println("DFS (Memoization) Time: " + elapsedTime);
+
+	  }
+
+	  public static void testEventProcessor2() {
+		  
+		  long startTime = System.currentTimeMillis();
+		  EventProcessor<String> ep=new EventProcessor<String>();//sourceNode,targetNode);
+	      
+		  Node<String> A = new Node<String>(new Interval1D(215, 221),"1");
+	      
+		  Node<String> B = new Node<String>(new Interval1D(1, 17),"2");
+	      
+	      Node<String> C = new Node<String>(new Interval1D(537, 546),"3");
+
+	      Node<String> D = new Node<String>(new Interval1D(774, 792),"4");
+	      
+	      Node<String> E = new Node<String>(new Interval1D(194,208),"5"); // changed from 10-13
+	      
+	      Node<String> F = new Node<String>(new Interval1D(473, 492),"6");
+	      
+	      Node<String> G = new Node<String>(new Interval1D(333,345),"7");
+	      
+	      Node<String> H = new Node<String>(new Interval1D(792, 802),"8");
+	      
+	      Node<String> I = new Node<String>(new Interval1D(147, 164),"9");
+
+	      Node<String> J = new Node<String>(new Interval1D(606, 614),"10");
+	      
+	      Node<String> K = new Node<String>(new Interval1D(37, 41),"11");
+
+	      Node<String> L = new Node<String>(new Interval1D(230, 235),"12");
+
+	      Node<String> M = new Node<String>(new Interval1D(63, 77),"13");
+
+	      Node<String> N = new Node<String>(new Interval1D(511, 515),"14");
+
+	      Node<String> O = new Node<String>(new Interval1D(526, 540),"15");
+
+	      Node<String> P = new Node<String>(new Interval1D(129, 147),"16");
+
+	      Node<String> Q = new Node<String>(new Interval1D(589, 603),"17");
+
+	      Node<String> R = new Node<String>(new Interval1D(431, 440),"18");
+
+	      Node<String> S = new Node<String>(new Interval1D(965, 970),"19");
+
+	      Node<String> T = new Node<String>(new Interval1D(143, 157),"20");
+
+	      /*
+	      */
+
+
+	      System.out.println("ADD: "+A);
+	      ep.add(A);
+	      System.out.println("ADD: "+B);
+	      ep.add(B);
+	      System.out.println("ADD: "+C);
+	      ep.add(C);
+	      System.out.println("ADD: "+D);
+	      ep.add(D);
+	      System.out.println("ADD: "+E);
+	      ep.add(E);
+	      System.out.println("ADD: "+F);
+	      ep.add(F);
+	      System.out.println("ADD: "+G);
+	      ep.add(G);
+	      System.out.println("ADD: "+H);
+	      ep.add(H);
+	      System.out.println("ADD: "+I);
+	      ep.add(I);
+	      System.out.println("ADD: "+J);
+	      ep.add(J);
+	      System.out.println("ADD: "+K);
+	      ep.add(K);
+	      System.out.println("ADD: "+L);
+	      ep.add(L);
+	      System.out.println("ADD: "+M);
+	      ep.add(M);
+	      System.out.println("ADD: "+N);
+	      ep.add(N);
+	      System.out.println("ADD: "+O);
+	      ep.add(O);
+	      System.out.println("ADD: "+P);
+	      ep.add(P);
+
+	      
+	      System.out.println("ADD: "+Q);
+	      ep.add(Q);
+	      System.out.println("ADD: "+R);
+	      ep.add(R);
+	      System.out.println("ADD: "+S);
+	      ep.add(S);
+	      System.out.println("ADD: "+T);
+	      ep.add(T);
+	      
+
+	      ///////
+	      long stopTime = System.currentTimeMillis();
+	      long elapsedTime = stopTime - startTime;
+	      System.out.println("DAG Construction Time: " + elapsedTime);
+	      System.out.println();
+	      System.out.println();
+	      
+	      /*
+	      System.out.println(P + "\nSuccessors " + P.successors + "\nPredecessors " + P.predecessors);
+	      System.out.println("\nOverlaps" + ep.st.searchAll(P.interval));
+		  Node<String> next=ep.st.searchSuccessor(new Interval1D(P.interval.high,P.interval.high));
+		  System.out.println("NEXT:"+next);
+		  //successors=st.searchAll(next.interval);
+	      System.out.println("\nSuccessors: " + ep.st.searchAll(next.interval));
+	      System.out.println(M + "\nSuccessors " + M.successors + "\nPredecessors " + M.predecessors);
+	      */
+	      
+
+	      // without memorization
+	      startTime = System.currentTimeMillis();
+	      ep.printPathsNoDyn();
+	      stopTime = System.currentTimeMillis();
+	      elapsedTime = stopTime - startTime;
+	      System.out.println("DFS (No Memoization) Time: " + elapsedTime);
+	  
+	      System.out.println();
+	      System.out.println();
+
+	      // with memorization
+	      /*
+	      startTime = System.currentTimeMillis();
+	      ep.printPaths();
+	      stopTime = System.currentTimeMillis();
+	      elapsedTime = stopTime - startTime;
+	      System.out.println("DFS (Memoization) Time: " + elapsedTime);
+	      */
+
+	  }
+
+	  public static void main(String args[]) {
+
+		  //testEventProcessor1();
+		  testEventProcessor2();
+
+
+	}
+
+
+
+
 } 
 
  

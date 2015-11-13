@@ -26,7 +26,7 @@ public class GraphTraversals<Value> {
 
 
   void printPathCount() {
-	// TODO Auto-generated method stub
+
 	  visited = new HashSet<Node<Value>>();
 	  paths = new HashMap<Node<Value>,ArrayList<LinkedList<Node<Value>>>>();
 	  graphDFSByRecersion();
@@ -40,7 +40,7 @@ public class GraphTraversals<Value> {
 
   
   void printPaths() {
-	// TODO Auto-generated method stub
+
 	  visited = new HashSet<Node<Value>>();
 	  paths = new HashMap<Node<Value>,ArrayList<LinkedList<Node<Value>>>>();
 	  graphDFSByRecersion();
@@ -61,7 +61,7 @@ public class GraphTraversals<Value> {
   }
 
   ArrayList<LinkedList<Node<Value>>> getPaths() {
-	// TODO Auto-generated method stub
+
 	  visited = new HashSet<Node<Value>>();
 	  paths = new HashMap<Node<Value>,ArrayList<LinkedList<Node<Value>>>>();
 	  graphDFSByRecersion();
@@ -226,15 +226,12 @@ public class GraphTraversals<Value> {
 	    for (Node<Value> successor : currentNode.successors) {
         	graphDFSByRecersionNoDyn(successor, printPaths);
 	    }
+	    // remove last for back tracking
     	pathSoFar.removeLast();
     }
   }
 	  
  
- 
-  public void visitNode(Node<Value> node) {
-    System.out.printf(" %s ", node.data);
-  }
  
   public static void testSampleGraph2() {
 	    //building sample graph.
