@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Random;
 
 
@@ -8,6 +9,7 @@ public class Main {
 	   * -p indicates whether to print the sequences
 	   * -m indicates to use memoization. otherwise only non-memoization technique is applied
 	   * -n NUM : the number of events to generate. default is 20
+	   * -o VALUE : maximum number of overlaps allowed. default=-1 meaning don't count overlaps
 	   * -el VALUE : input event length. default is 20
 	   * -r		: random length of event, otherwise fixed length
 	   * -wl VALUE : input window length. default is 1000
@@ -22,6 +24,7 @@ public class Main {
 		  boolean print=false;
 		  boolean memoization=false;
 		  int eventLength=20;
+		  int maxOverlaps=-1; // -1 is default: means don't check overlaps
 		  int windowLength=1000;
 		  boolean alg1=false; // ces fusion
 		  boolean alg2=false; // ces non-dynamic
@@ -36,6 +39,7 @@ public class Main {
 			  if (args[i].equals("-r")) randomlength=true;
 			  if (args[i].equals("-m")) memoization=true;
 			  if (args[i].equals("-n")) n=Integer.parseInt(args[++i]);
+			  if (args[i].equals("-o")) maxOverlaps=Integer.parseInt(args[++i]);
 			  if (args[i].equals("-el")) eventLength=Integer.parseInt(args[++i]);
 			  if (args[i].equals("-wl")) windowLength=Integer.parseInt(args[++i]);
 			  //if (args[i].charAt(0)!='-') n=Integer.parseInt(args[i]);
@@ -43,13 +47,14 @@ public class Main {
 		  if(alg1==false && alg2==false && alg3==false){
 			  alg1=true;
 		  }
-		  GeenerateAndTestEventProcessor(n, print, alg1, alg2, alg3, randomlength, memoization,eventLength,windowLength);
+		  GeenerateAndTestEventProcessor(n, print, maxOverlaps, alg1, alg2, alg3, randomlength, memoization,eventLength,windowLength);
 	   }
 	  
 	  /**
 	   * randomly create the events and apply sequence construction technique based on the input
 	   * @param n : number of events
 	   * @param p : print the sequences. otherwise only print the number of sequence
+	   * @param maxOverlaps : maximum number of overlaps allowed
 	   * @param alg1 : use CES Fusion
 	   * @param alg2 : use CEStream non-dynamic
 	   * @param alg3 : use CEStream dynamic
@@ -60,7 +65,7 @@ public class Main {
 	   */
 			  
 	  
-	  public static void GeenerateAndTestEventProcessor(int n, boolean p, 
+	  public static void GeenerateAndTestEventProcessor(int n, boolean p, int maxOverlaps,
 			  boolean alg1, boolean alg2, boolean alg3, boolean randomlength,
 			  boolean memoizaton, int eventlength, int windowLength){
 	      int N = n;
@@ -83,9 +88,26 @@ public class Main {
 	          
 	          Node<String> node = new Node<String>(new Interval1D(low, high),""+i);
 	          if(!ep.contains(node)){
-		          System.out.print(node + " ");
-		          if (i%5==0) System.out.println();
-		          ep.add(node);
+	        	  if (maxOverlaps == -1){
+			          System.out.print(node + " ");
+			          if (i%5==0) System.out.println();
+			          ep.add(node);
+	        	  }
+	        	  else{
+	        		  int overlapsCount=ep.findOverlapsCount(node);
+
+		        	  if (overlapsCount <= maxOverlaps ){
+				          System.out.print(node + " ");
+				          if (i%5==0) System.out.println();
+				          ep.add(node);
+		        	  }
+		        	  else{
+		        		  i--;
+		        	  }
+	        		  
+	        	  
+	        	  }
+	        	  
 	          }
 	          else{
 	        	  i--;
@@ -195,6 +217,10 @@ public class Main {
 	      // call the 0-cut partitioning with limit 8
 	      //ep.findCuts(8, 0);
 	      ep.findCuts(minSize, 0);
+	      
+	      // find optimal partitioning
+	      // for optimal we can use limit=1 in findcuts()
+	      // ep.searchOptimal();
 	      
 	      
 	      // call DFS for each of the partition and record # of sequences

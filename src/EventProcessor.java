@@ -308,7 +308,7 @@ public class EventProcessor<Value> {
 		  System.out.println("No path found!");
 	}
 	
-  public void genSequencesFromParts(int partIndex, boolean print) {
+  private void genSequencesFromParts(int partIndex, boolean print) {
 		int partCount=pathsOfParts.size();
 		if(partIndex < partCount){
 			ArrayList<LinkedList<Node<Value>>> curPaths =pathsOfParts.get(partIndex);
@@ -330,15 +330,22 @@ public class EventProcessor<Value> {
 		}
 	}
 	
-	private void searchOptimal() {
+	public void searchOptimal() {
 
 		
 	}
 	
-	private void validateParts() {
+	public void validateParts() {
 		
 		
 	}
+
+	public int findOverlapsCount(Node node) {
+		HashSet<Node<Value>> overlaps = new HashSet<Node<Value>>();
+			overlaps = intervalTree.searchAll(node.interval);
+		return overlaps.size();
+	}
+	
 	private long estimateCost() {
 		HashSet<Node<Value>> allNodes = new HashSet<Node<Value>>();
 		HashSet<Node<Value>> overlaps = new HashSet<Node<Value>>();
